@@ -1,0 +1,7 @@
+{
+    "isNumber": {
+        "notNumber": "变量不是number类型",
+        "notSafeNumber": "变量不是安全的number数值",
+        "isNumber": "变量为number类型"
+    }
+}
