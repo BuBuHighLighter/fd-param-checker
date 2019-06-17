@@ -1,7 +1,7 @@
 {
-  "name": "checktype",
+  "name": "fd-param-checker",
   "version": "1.0.0",
-  "description": "",
+  "description": "用于参数检查的工具(a tool which is used for checking params)",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -15,15 +15,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BuBuHighLighter/paramChecker.git"
+    "url": "git+https://github.com/BuBuHighLighter/param_checker.git"
   },
   "keywords": [
-    "typeChecker"
+    "paramsChecking",
+    "node"
   ],
-  "author": "fandi",
+  "author": "bubugaodahuoji",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BuBuHighLighter/paramChecker/issues"
+    "url": "https://github.com/BuBuHighLighter/param_checker/issues"
   },
-  "homepage": "https://github.com/BuBuHighLighter/paramChecker#readme"
+  "homepage": "https://github.com/BuBuHighLighter/param_checker#readme"
 }
