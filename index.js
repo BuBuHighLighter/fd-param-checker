@@ -19,7 +19,7 @@ class typeChecker {
         this.onlyType = null;                       // 只允许类型
         this.notType = [];                          // 不允许类型
         this.target = target;                       // 对象变量
-        this.errStack = [];
+        this.errStack = [];                         // 错误栈
     }
 
     done() {
@@ -31,33 +31,33 @@ class typeChecker {
 
         // 构造不允许的列表
         if (this.notType.length !== 0) {
-            for(let i = 0; i < this.notType.length; i++) {
+            for (let i = 0; i < this.notType.length; i++) {
                 this.notType[i] = `[object ${this.notType[i]}]`;
             }
         }
 
         // 构造允许的列表
-        if(this.shouldType.length !== 0) {
-            for(let i = 0; i < this.shouldType.length; i++) {
+        if (this.shouldType.length !== 0) {
+            for (let i = 0; i < this.shouldType.length; i++) {
                 this.shouldType[i] = `[object ${this.shouldType[i]}]`;
             }
         }
 
-        if(this.notType.length !== 0 && this.notType.includes(Object.prototype.toString.call(this.target)))
+        if (this.notType.length !== 0 && this.notType.includes(Object.prototype.toString.call(this.target)))
             this.errStack.push(new Error(`不允许的类型`));
 
-        if(this.shouldType.length !== 0 && !this.shouldType.includes(Object.prototype.toString.call(this.target)))
+        if (this.shouldType.length !== 0 && !this.shouldType.includes(Object.prototype.toString.call(this.target)))
             this.errStack.push(new Error(`类型不符合`));
-        
+
 
         // 如果是Number类型的，需要判断是否是安全数
-        if(Object.prototype.toString.call(this.target) === '[object Number]') {
-            if(!Number.isSafeInteger(this.target))
+        if (Object.prototype.toString.call(this.target) === '[object Number]') {
+            if (!Number.isSafeInteger(this.target))
                 this.errStack.push(new Error(`非安全数值`));
         }
-        if(this.errStack.length === 0)
+        if (this.errStack.length === 0)
             return this.target;
-        else if(this.errStack.length !== 0)
+        else if (this.errStack.length !== 0)
             throw this.errStack[0];
     }
 
@@ -106,7 +106,7 @@ class typeChecker {
     // 检查字符串长度(这里还需要判断一下array的长度，之后再加)
     limitLen(max, min = 0) {
         if (typeof max === 'undefined' || typeof max === 'null' || max === undefined || max === null)
-            this.errStack.push(new Error(`limitLen参数错误`))
+            this.errStack.push(new Error(`limitLen参数错误`));
 
         if (typeof max !== 'number' || Object.prototype.toString.call(max) === '[object Number]')
             max = Number(max);
@@ -227,22 +227,22 @@ class typeChecker {
 
     // 可以为empty
     isEmpty() {
-        if(this.target !== '' && 
-            this.target !== undefined && 
-            this.target !== null && 
-            !(Object.prototype.toString.call(this.target) === '[object Object]' &&  JSON.stringify(this.target) === JSON.stringify({}) ) &&
-            !(Object.prototype.toString.call(this.target) === '[object Array]' && JSON.stringify(this.target) === JSON.stringify([]))) 
+        if (this.target !== '' &&
+            this.target !== undefined &&
+            this.target !== null &&
+            !(Object.prototype.toString.call(this.target) === '[object Object]' && JSON.stringify(this.target) === JSON.stringify({})) &&
+            !(Object.prototype.toString.call(this.target) === '[object Array]' && JSON.stringify(this.target) === JSON.stringify([])))
             this.errStack.push(new Error(`变量不为empty`));
         return this;
     }
 
     // 不为empty
     notEmpty() {
-        if(this.target === '' || 
-            this.target === undefined || 
-            this.target === null || 
-            (Object.prototype.toString.call(this.target) === '[object Object]' &&  JSON.stringify(this.target) === JSON.stringify({}) ) ||
-            (Object.prototype.toString.call(this.target) === '[object Array]' && JSON.stringify(this.target) === JSON.stringify([]))) 
+        if (this.target === '' ||
+            this.target === undefined ||
+            this.target === null ||
+            (Object.prototype.toString.call(this.target) === '[object Object]' && JSON.stringify(this.target) === JSON.stringify({})) ||
+            (Object.prototype.toString.call(this.target) === '[object Array]' && JSON.stringify(this.target) === JSON.stringify([])))
             this.errStack.push(new Error(`变量为empty`));
         return this;
     }
