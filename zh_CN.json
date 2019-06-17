@@ -8,5 +8,10 @@
     "isArray": {
         "notObject": "变量不是object类型",
         "notArray": "变量不是Array类型"
+    },
+
+    "limitNum": {
+        "IllegalNum": "变量不属于规定取值范围",
+        "notSafeNum": "变量取值不属于安全数范围"
     }
 }

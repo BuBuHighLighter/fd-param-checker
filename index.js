@@ -82,6 +82,38 @@ class typeChecker {
         return this;
     }
 
+    // 限制number大小（在安全数范围内的小数依然不好判断）
+    limitNum(max, min) {
+        if (Object.prototype.toString.call(this.target) !== '[object Number]')
+            this.target = Number(this.target);
+        if (isNaN(this.target))
+            return this;
+
+        if (Object.prototype.toString.call(min) !== '[object Number]')
+            min = Number(min);
+        if (Object.prototype.toString.call(max) !== '[object Number]')
+            max = Number(max);
+
+        if (isNaN(min) || !Number.isSafeInteger(max))
+            max = Number.MAX_SAFE_INTEGER;
+        if (isNaN(max) || !Number.isSafeInteger(min))
+            min = Number.MIN_SAFE_INTEGER;
+
+        if (max < min) {
+            let tmp = max;
+            max = min;
+            min = tmp;
+        }
+
+        if (!Number.isSafeInteger(this.target))
+            this.errStack.push(new Error(lan.limitNum.notSafeNum));
+
+        if (this.target < min || this.target > max)
+            this.errStack.push(new Error(lan.limitNum.IllegalNum));
+
+        return this;
+    }
+
     /**
      * String类型
      */
@@ -246,6 +278,8 @@ class typeChecker {
             this.errStack.push(new Error(`变量为empty`));
         return this;
     }
+
+
 }
 
 module.exports = typeChecker
