@@ -3,14 +3,14 @@
 fd-param-checker是一个用于参数检测的工具包，致力于快速完成参数检测条件的约束
 ## 安装 (Install)
 
-```
-npm install fd-param-checker
+```bash
+$ npm install fd-param-checker
 ```
 
-## 使用(Usage)
+## 使用 (Usage)
 
 #### 引入模块
-```
+```js
 const checker = require('fd-param-checker');
 ```
 
@@ -24,7 +24,7 @@ const checker = require('fd-param-checker');
 **示例1**
 
 ```only*```限制仅为某一类型。
-```
+```js
 function func(argv) {
     let param = new checker(argv).onlyNumber().done();      // 约束参数argv仅为Number类型，返回值保存到param对象中
 }
@@ -33,7 +33,7 @@ function func(argv) {
 **示例2**
 
 ```is*```声明可以为某一类型。
-```
+```js
 function func(argv) {
     let param = new checker(argv).isNumber().isString().done()      // 约束参数argv可以为Number或者String类型
 }
@@ -42,7 +42,7 @@ function func(argv) {
 **示例3**
 
 ```not*```声明排除某一类型。
-```
+```js
 function func(argv) {
     let param = new checker(argv).notBoolean().notUndefined().notNull().done();         // 约束参数argv不能为Boolean,Undefined,Null类型
 }
@@ -52,14 +52,14 @@ function func(argv) {
 
 ```limitLen()```限制参数长度。注意：```limitLen()```方法仅对Number(隐式转换为String)、String、Array类型有效。
 
-```
+```js
     function func(argv) {
         let param = new checker(argv).isNumber().isString().isArray().limitLen(9).done();       // 约束参数可以是Number,String,Array类型，且长度为[0,9]
     }
 ```
 limitLen参数列表
 
-```
+```js
 function limitLen(max, min=0) {
     /* 内部实现代码 */
 }
@@ -81,7 +81,7 @@ function limitLen(max, min=0) {
 |4|{}|空对象|
 |5|[]|空数组|
 
-```
+```js
 function func(argv) {
     let param = new checker(argv).isEmpty().done();
 }
@@ -90,7 +90,7 @@ function func(argv) {
 #### 错误处理
 如果参数不满足约束条件，则会在链式操作中抛出异常。目前的错误处理只能在链式操作之外使用```try...catch```。
 
-```
+```js
 function func(argv) {
     let param;
     try {
