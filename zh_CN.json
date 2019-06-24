@@ -13,5 +13,18 @@
     "limitNum": {
         "IllegalNum": "变量不属于规定取值范围",
         "notSafeNum": "变量取值不属于安全数范围"
+    },
+
+    "done": {
+        "notAllowedType": "不允许的类型",
+        "wrongType": "类型不符合",
+        "notSafeNum": "非安全数值"
+    },
+
+    "limitLen": {
+        "wrongArgv": "limitLen参数错误",
+        "invalidArgvMin": "limitLen参数min无效",
+        "invalidArgvMax": "limitLen参数max无效",
+        "illegalArgv": "limitLen参数max不能小于min"
     }
 }

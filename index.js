@@ -44,16 +44,16 @@ class typeChecker {
         }
 
         if (this.notType.length !== 0 && this.notType.includes(Object.prototype.toString.call(this.target)))
-            this.errStack.push(new Error(`不允许的类型`));
+            this.errStack.push(new Error(lan.done.notAllowedType));
 
         if (this.shouldType.length !== 0 && !this.shouldType.includes(Object.prototype.toString.call(this.target)))
-            this.errStack.push(new Error(`类型不符合`));
+            this.errStack.push(new Error(lan.done.wrongType));
 
 
         // 如果是Number类型的，需要判断是否是安全数
         if (Object.prototype.toString.call(this.target) === '[object Number]') {
             if (!Number.isSafeInteger(this.target))
-                this.errStack.push(new Error(`非安全数值`));
+                this.errStack.push(new Error(lan.done.notSafeNum));
         }
         if (this.errStack.length === 0)
             return this.target;
@@ -138,7 +138,7 @@ class typeChecker {
     // 检查字符串长度(这里还需要判断一下array的长度，之后再加)
     limitLen(max, min = 0) {
         if (typeof max === 'undefined' || typeof max === 'null' || max === undefined || max === null)
-            this.errStack.push(new Error(`limitLen参数错误`));
+            this.errStack.push(new Error(lan.limitLen.wrongArgv));
 
         if (typeof max !== 'number' || Object.prototype.toString.call(max) === '[object Number]')
             max = Number(max);
@@ -147,16 +147,16 @@ class typeChecker {
             min = Number(min);
 
         if (isNaN(min))
-            this.errStack.push(new Error('limitLen参数min无效'));
+            this.errStack.push(new Error(lan.limitLen.invalidArgvMin));
 
         if (isNaN(max))
-            this.errStack.push(new Error('limitLen参数max无效'));
+            this.errStack.push(new Error(lan.limitLen.invalidArgvMax));
 
         max = parseInt(max);
         min = parseInt(min);
 
         if (max < min)
-            this.errStack.push(new Error('limitLen参数max不能小于min'));
+            this.errStack.push(new Error(lan.limitLen.illegalArgv));
 
         if (typeof this.target === 'number' && Object.prototype.toString.call(this.target) === '[object Number]') {
             // 如果是number类型的转为字符串类型进行判断
