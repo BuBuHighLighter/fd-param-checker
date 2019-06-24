@@ -21,25 +21,56 @@ const checker = require('fd-param-checker');
 
 链式操作末尾必须使用```done()```方法进行收尾操作。
 
-**示例1**
+#### only约束
 
-```only*```限制仅为某一类型。
+```only*```限制**仅**为某一类型。
 ```js
 function func(argv) {
     let param = new checker(argv).onlyNumber().done();      // 约束参数argv仅为Number类型，返回值保存到param对象中
 }
 ```
 
-**示例2**
+**only\*包含的约束**
+| 方法名          | 参数 | 说明 |
+| --------------- | ---- | ---- |
+| onlyNumber()    | -    | -    |
+| onlyString()    | -    | -    |
+| onlyUndefined() | -    | -    |
+| onlyNull()      | -    | -    |
+| onlyBoolean()   | -    | -    |
+| onlyArray()     | -    | -    |
 
-```is*```声明可以为某一类型。
+
+#### is约束
+
+```is*```声明**可以**为某一类型。
 ```js
 function func(argv) {
-    let param = new checker(argv).isNumber().isString().done()      // 约束参数argv可以为Number或者String类型
+    let param = new checker(argv).isNumber().done()      // 约束参数argv可以为Number类型（不为Number类型则会抛出异常）
+}
+```
+约束变量时可以使用多个is*方法进行约束，表示该变量可以是多个约束条件中的一个。
+```js
+function func(argv) {
+    let param = new checker(argv).isNumber().isString().dome()      // 约束参数argv可以为Number或者String类型
 }
 ```
 
-**示例3**
+**is\*包含的约束**
+| 方法名        | 参数 | 说明                                      |
+| ------------- | ---- | ----------------------------------------- |
+| isNumber()    | -    | -                                         |
+| isString()    | -    | -                                         |
+| isUndefined() | -    | -                                         |
+| isNull()      | -    | -                                         |
+| isBoolean()   | -    | -                                         |
+| isArray()     | -    | -                                         |
+| isEmpty()     | -    | empty包括：```, undefined, null, [], {}`` |
+
+**注意**
+1.isEmpty()允许变量可以是“空”变量，包括：```'', undefined, null, [], {} ```。
+
+#### not约束
 
 ```not*```声明排除某一类型。
 ```js
@@ -48,9 +79,20 @@ function func(argv) {
 }
 ```
 
-**示例4**
+**not\*包含的约束**
+| 方法名         | 参数 | 说明                                      |
+| -------------- | ---- | ----------------------------------------- |
+| notNumber()    | -    | -                                         |
+| notString()    | -    | -                                         |
+| notUndefined() | -    | -                                         |
+| notNull()      | -    | -                                         |
+| notBoolean()   | -    | -                                         |
+| notArray()     | -    | -                                         |
+| notEmpty()     | -    | empty包括：```, undefined, null, [], {}`` |
 
-```limitLen()```限制参数长度。注意：```limitLen()```方法仅对Number(隐式转换为String)、String、Array类型有效。
+#### limitLen约束
+
+```limitLen()```限制参数长度。注意：```limitLen()```方法仅对Number(隐式转换为String，检查Number的字符长度)、String、Array类型有效。
 
 ```js
     function func(argv) {
@@ -70,22 +112,32 @@ function limitLen(max, min=0) {
 | max    | 是   | -      |
 | min    | 否   | 0      |
 
-**示例5**
-```isEmpty()```限制参数仅可为“空参数”中某一种。“空参数”定义如下表：
+#### limitNum约束
+```limitNum()```约束Number类型的数值范围。
 
-| #   | 内容      | 说明          |
-| --- | --------- | ------------- |
-| 1   | ''        | 空字符串      |
-| 2   | undefined | Undefined类型 |
-| 3   | null      | Null类型      |
-| 4   | {}        | 空对象        |
-| 5   | []        | 空数组        |
+**注意**
+
+1.因为涉及到安全数的概念，所以如果数值超过安全数范围(Number.MIN_SAFE_INTEGER~Number.MAX_SAFE_INTEGER)的话，则会失去比较意义。
+
+2.该取值范围为闭区间，如果目标值等于参数也是属于允许范围的。
 
 ```js
 function func(argv) {
-    let param = new checker(argv).isEmpty().done();
+    let param = new checker(argv).limitNum(9, 5).done();
 }
 ```
+
+limitNum参数列表
+```js
+function limitNum(max, min) {
+    /* 内部实现代码 */
+}
+```
+
+|参数名|必须|默认值|
+|-|-|-|
+|max|是|-|
+|min|是|-|
 
 #### 错误处理
 如果参数不满足约束条件，则会在链式操作中抛出异常。目前的错误处理只能在链式操作之外使用```try...catch```。
