@@ -1,6 +1,6 @@
 {
   "name": "fd-param-checker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "用于参数检查的工具(a tool which is used for checking params)",
   "main": "index.js",
   "directories": {

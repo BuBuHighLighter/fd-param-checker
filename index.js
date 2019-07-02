@@ -46,7 +46,7 @@ class typeChecker {
         if (this.notType.length !== 0 && this.notType.includes(Object.prototype.toString.call(this.target)))
             this.errStack.push(new Error(lan.done.notAllowedType));
 
-        if (this.shouldType.length !== 0 && !this.shouldType.includes(Object.prototype.toString.call(this.target)))
+        if (this.shouldType.length !== 0 && !this.shouldType.includes(Object.prototype.toString.call(this.target)) && !this.shouldType.includes('[object true]'))
             this.errStack.push(new Error(lan.done.wrongType));
 
 
@@ -279,7 +279,130 @@ class typeChecker {
         return this;
     }
 
+    // Date类型
+    onlyDate() {
+        // 备份数据（如果是无效Date的话，需要还原回去）
+        let originParam;
+        if(Object.prototype.toString.call(this.target) === '[object String]' 
+        || Object.prototype.toString.call(this.target) === '[object Number]'
+        || Object.prototype.toString.call(this.target) === '[object Undefined]'
+        || Object.prototype.toString.call(this.target) === '[object Null]'
+        || Object.prototype.toString.call(this.target) === '[object Boolean]')
+            originParam = this.target;
+        else if(Object.prototype.toString.call(this.target) === '[object Array]'
+        || Object.prototype.toString.call(this.target) === '[object Object]')
+            originParam = JSON.parse(JSON.stringify(this.target));
+        else 
+            originParam = this.target;
 
+        if(typeof this.target === 'string' || Object.prototype.toString.call(this.target) === '[object String]')
+            this.target = new Date(this.target);
+
+        if(this.target.toString() === 'Invalid Date')
+            this.errStack.push(new Error(lan.onlyDate.invalidDate));
+        
+        this.target = originParam;
+        return this;
+    }
+
+    isDate() {
+        // 备份数据（如果是无效Date的话，需要还原回去）
+        let originParam;
+        if(Object.prototype.toString.call(this.target) === '[object String]' 
+        || Object.prototype.toString.call(this.target) === '[object Number]'
+        || Object.prototype.toString.call(this.target) === '[object Undefined]'
+        || Object.prototype.toString.call(this.target) === '[object Null]'
+        || Object.prototype.toString.call(this.target) === '[object Boolean]')
+            originParam = this.target;
+        else if(Object.prototype.toString.call(this.target) === '[object Array]'
+        || Object.prototype.toString.call(this.target) === '[object Object]')
+            originParam = JSON.parse(JSON.stringify(this.target));
+        else 
+            originParam = this.target;
+
+        if(typeof this.target === 'string' || Object.prototype.toString.call(this.target) === '[object String]'
+        || Object.prototype.toString.call(this.target) === '[object Number]')
+            this.target = new Date(this.target);
+        
+        if(Object.prototype.toString.call(originParam) !== '[object Undefined]'
+        && Object.prototype.toString.call(originParam) !== '[object Null]'
+        && this.target.toString() !== 'Invalid Date')
+            this.shouldType.push('true');
+
+        this.target = originParam;
+        this.shouldType.push('Date');
+        return this;
+    }
+
+    DateBetween(min='1970-01-01 08:00:00', max='9999-12-31 23:59:59') {
+        // 备份数据（如果是无效Date的话，需要还原回去）
+        let originParam;
+        if(Object.prototype.toString.call(this.target) === '[object String]' 
+        || Object.prototype.toString.call(this.target) === '[object Number]'
+        || Object.prototype.toString.call(this.target) === '[object Undefined]'
+        || Object.prototype.toString.call(this.target) === '[object Null]'
+        || Object.prototype.toString.call(this.target) === '[object Boolean]')
+            originParam = this.target;
+        else if(Object.prototype.toString.call(this.target) === '[object Array]'
+        || Object.prototype.toString.call(this.target) === '[object Object]')
+            originParam = JSON.parse(JSON.stringify(this.target));
+        else 
+            originParam = this.target;
+
+        if(typeof min === 'string' || Object.prototype.toString.call(min) === '[object String]')
+            min = new Date(min);
+        if(min.toString() === 'Invalid Date')
+            this.errStack.push(new Error(lan.dateBetween.invalidParamMin));
+
+        if(typeof max === 'string' || Object.prototype.toString.call(max) === '[object String]')
+            max = new Date(max);
+        if(max.toString() === 'Invalid Date')
+            this.errStack.push(new Error(lan.dateBetween.invalidParamMax));
+
+        if(min > max)
+            this.errStack.push(new Error(lan.dateBetween.illegalParams))
+        if(typeof this.target === 'string' || Object.prototype.toString.call(this.target) === '[object String]')
+            this.target = new Date(this.target);
+        if(this.target === undefined || this.target === null || this.target.toString() === 'Invalid Date')
+            this.errStack.push(new Error(lan.dateBetween.invalidDate));
+
+        if(this.target < min || this.target > max)
+            this.errStack.push(lan.dateBetween.illegalDate);
+        
+        this.target = originParam;
+        return this;
+    }
+}
+
+
+/**
+ * 封装Date对象的Format方法
+ */
+Date.prototype.Format = function (fmt) 
+{
+	var o = {
+		"M+": this.getMonth() + 1, //月份 
+		"d+": this.getDate(), //日 
+		"h+": this.getHours(), //小时 
+		"m+": this.getMinutes(), //分 
+		"s+": this.getSeconds(), //秒 
+		"q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+		"S": this.getMilliseconds() //毫秒 
+	};
+	if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	for (var k in o)
+	if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	return fmt;
+}
+/**
+ * 格式化日期
+ * @param {any} date 
+ * @param {string} mat 
+ * @returns {string}
+ */
+function GetDate(date, mat='yyyy-MM-dd hh:')
+{
+	return new Date(date).Format(mat);
 }
 
 module.exports = typeChecker

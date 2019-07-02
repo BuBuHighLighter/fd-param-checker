@@ -26,5 +26,15 @@
         "invalidArgvMin": "limitLen参数min无效",
         "invalidArgvMax": "limitLen参数max无效",
         "illegalArgv": "limitLen参数max不能小于min"
+    },
+    "onlyDate": {
+        "invalidDate": "非有效日期"
+    },
+    "dateBetween": {
+        "illegalParams": "非法参数",
+        "invalidParamMax": "无效的参数max",
+        "invalidParamMin": "无效的参数min",
+        "invalidDate": "非有效日期",
+        "illegalDate": "日期不在规定范围内"
     }
 }
